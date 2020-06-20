@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BucketScript : MonoBehaviour
+public class BucketScript : MonoBehaviour, IBucket
 {
-    [SerializeField] int pointForWin;
+    [SerializeField] int pointForWin; 
     int actualPointNumber;
 
+
+    private void Awake()
+    {
+        
+    }
     private void Start()
     {
         actualPointNumber = pointForWin;
@@ -18,7 +23,7 @@ public class BucketScript : MonoBehaviour
         actualPointNumber--;
         if(actualPointNumber == 0)
         {
-            Debug.Log("Win ! ");
+            GameObject.Find("Canvas").GetComponent<CanvasScript>().ActiveButton();
         }
     }
 }

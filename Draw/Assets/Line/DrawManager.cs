@@ -12,10 +12,9 @@ public class DrawManager : MonoBehaviour
     public EdgeCollider2D edgeCollider;
     public LineRenderer lineRenderer;
     public List<Vector2> fingerPosition;
-    public int amountLine;
+    public float amountLine;
     public bool erase;
     [SerializeField] float eraseRange;
-    [SerializeField]
     Slider slider;
     [SerializeField]
     Color colorRed, colorBlack;
@@ -27,6 +26,7 @@ public class DrawManager : MonoBehaviour
         {
             instance = this;
         }
+        slider = GameObject.Find("LineBar").GetComponent<Slider>();
         slider.maxValue = amountLine;
         slider.minValue = 0;
         slider.value = amountLine;
@@ -53,7 +53,7 @@ public class DrawManager : MonoBehaviour
                     Vector2 tempFingerPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     if (Vector2.Distance(tempFingerPos, fingerPosition[fingerPosition.Count - 1]) > .1f)
                     {
-                        amountLine--;
+                        
                         SliderManager.instance.SetSliderLine(amountLine);
                         UpdateLine(tempFingerPos);
                     }
@@ -112,10 +112,13 @@ public class DrawManager : MonoBehaviour
 
     private void UpdateLine(Vector2 newFingerPos)
     {
+        
         fingerPosition.Add(newFingerPos);
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount -1  , newFingerPos);
         edgeCollider.points = fingerPosition.ToArray();
+        Debug.Log(Vector2.Distance(lineRenderer.GetPosition(lineRenderer.positionCount - 1), lineRenderer.GetPosition(lineRenderer.positionCount - 2)));
+        amountLine -= Vector2.Distance(lineRenderer.GetPosition(lineRenderer.positionCount - 1), lineRenderer.GetPosition(lineRenderer.positionCount - 2));
     }
 
     public void ChangeMode()
